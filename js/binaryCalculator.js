@@ -14,9 +14,7 @@ function utils() {
 // Inheritance
 class  Operations {
     sum = function(x,y){
-        debugger
         return x + y;
-
     }
     sub= function(x,y){
         return x - y;
@@ -102,8 +100,8 @@ class Calculator extends Operations{
 
 // Prototype inheritance
 Calculator.prototype.showResult = function() {
-    let firstNum = parseInt(this.firstElem)
-    let secondNum = parseInt(this.secondElem)
+    let firstNum = parseInt(this.firstElem, 2)
+    let secondNum = parseInt(this.secondElem, 2)
     let result;
     switch(this.operation){
         case '+':
@@ -120,7 +118,7 @@ Calculator.prototype.showResult = function() {
             break;
     }
     this.clearScreen()
-    this.addToScreen(result)
+    this.addToScreen(result.toString(2))
 
 }
 
