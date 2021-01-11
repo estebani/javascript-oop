@@ -19,7 +19,7 @@
     color:white;
 }
 
-#btnSum, btnSub, btnMul, btnDiv{
+#btnSum, #btnSub, #btnMul, #btnDiv{
     background-color:black;
     color:red;
 }

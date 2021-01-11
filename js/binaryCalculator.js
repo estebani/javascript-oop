@@ -1,31 +1,55 @@
 'use strict';
 
-// Decorator Design - Patter
-function validations(val) {
-    // Clousure - IIFE
-    (function firstPress(screen) {
-        if(screen.length === 0 && (val !== 'btn0' && val !== 'btn1')){
-            throw new Error('the first element cannot be an operand')
+// Decorator DesignPatter - Clousure
+function utils() {
+    return {
+        validateFirstPress: function(val){
+            if(this.screen.innerText.length === 0 && (val !== '0' && val !== '1')){
+                throw new Error('the first element cannot be an operand')
+            }
         }
-    })(this.screen);
+    }
+}
+
+// Inheritance
+class  Operations {
+    sum = function(x,y){
+        debugger
+        return x + y;
+
+    }
+    sub= function(x,y){
+        return x - y;
+
+    }
+    mul= function(x,y){
+        return x * y;
+
+    }
+    div= function(x,y){
+        return x / y;
+    }
 }
  
 
-class Calculator{
+class Calculator extends Operations{
     // Properties
     screen;
     buttons;
-    firstElem;
-    secondElem;
+    firstElem='';
+    secondElem='';
+    currentElem = 0;
+    operation;
     
     constructor(){
-        //@immutable()
-        this.screen = document.getElementById('res').innerText;
+        super();
+        const util = utils();
+        this.screen = document.getElementById('res');
         this.buttons = document.querySelectorAll('button');
         for(let button of this.buttons){
             button.addEventListener('click',(e)=>{
-                const val = e.target.id;
-                validations.call(this, val);
+                const val = e.target.innerText;
+                util.validateFirstPress.call(this,val)
                 this.switchButton(val)
             })
         }
@@ -33,36 +57,73 @@ class Calculator{
     
     switchButton(key){
         switch(key){
-            case 'btn0':
+            case '0':
+            case '1':
+                this.setElements(key);
                 break;
-            case 'btn1':
+            case 'C':
+                this.clearScreen();
                 break;
-            case 'btnClr':
+            case '=':
+                this.showResult();
                 break;
-            case 'btnEql':
-                break;
-            case 'btnSum':
-                break;
-            case 'btnSub':
-                break;
-            case 'btnMul':
-                break;
-            case 'btnDiv':
+            case '+':
+            case '-':
+            case '*':
+            case '/':
+                this.setOperation(key);
                 break;
         }
         
     }
+    
     clearScreen(){
-        screen.innerText = '';
+        this.screen.innerText = '';
+        this.firstElem = ''; 
+        this.secondElem = '';
+        this.currentElem = 0;
+    };
+    setElements(digit){
+        if(this.currentElem==0) this.firstElem+=digit;
+        else this.secondElem+=digit;
+        this.addToScreen(digit);
     }
-    sum(){}
-    sub(){}
-    mul(){}
-    div(){}     
+    setOperation(operation){
+        this.operation = operation;
+        this.currentElem = 1;
+        this.addToScreen(operation);
+    }
+    addToScreen(x){
+        this.screen.innerText = this.screen.innerText+x;
+    }
+    
 };
 
+
+// Prototype inheritance
 Calculator.prototype.showResult = function() {
-    debugger
+    let firstNum = parseInt(this.firstElem)
+    let secondNum = parseInt(this.secondElem)
+    let result;
+    switch(this.operation){
+        case '+':
+            result = this.sum(firstNum, secondNum);
+            break;
+        case '-':
+            result = this.sub(firstNum, secondNum);
+            break;
+        case '*':
+            result = this.mul(firstNum, secondNum);
+            break;
+        case '/':
+            result = this.div(firstNum, secondNum);
+            break;
+    }
+    this.clearScreen()
+    this.addToScreen(result)
+
 }
+
+
 new Calculator();
 
